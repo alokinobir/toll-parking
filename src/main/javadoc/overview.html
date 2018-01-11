@@ -1,0 +1,43 @@
+<body>
+<h1>This library provides a simple API to manage Toll parkings.</h1>
+<br/>
+<br/>
+
+<h2>com.nri.tollparking.PackagingActivityManager is the API entry point</h2>
+
+It provides the access to the API with two main public methods
+
+<ul>
+    <li>comeIn(car, startDateTime): a car wants to park at startDateTime</li>
+    <li>comeOut(car, endDateTime): a car leaves at endDateTime</li>
+</ul>
+
+The ParkingActivityManager delegates:
+
+<ul>
+    <li>ParkingSlot assignments or refusals to a com.nri.tollparking.business.ParkingAvailabilityManager</li>
+    <li>Billing tasks to a com.nri.tollparking.business.pricing.ParkingAccountingManager</li>
+</ul>
+
+When the car leaves, the corresponding customer (the owner of the car) is billed thanks to the AccountingManager.
+<br/>
+The AccountingManager uses the PricingPolicy which was applicable when the user has been assigned a slot.
+
+
+The ParkingActivityManager configuration can be tuned to:
+<ul>
+    <li>set a new ParkingAvailabilityManager</li>
+    <li>set a new ParkingAccountManager</li>
+    <li>set a new Pricing Policy</li>
+</ul>
+
+The creation a data (Parking, Car, ParkingSlot...) can be done with the provider Builders in com.nri.tollparking.builder package.
+<br/>
+<br/>
+
+com.nri.tollparking.client.Client is an example of usage of the API.
+<br/>
+<br/>
+
+The library is not thread-safe. Synchronization must be handled externally.
+</body>
