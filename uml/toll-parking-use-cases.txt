@@ -1,0 +1,41 @@
+@startuml
+(Applies pricing policy) as Prices
+(Bills customer) as Bills
+(Wants to park) as Parks
+(Leaves parking) as Leaves
+(Seach for a free parking slot) as Searches
+(Books a free parking slot) as Books
+(Refuses the car) as Refuses
+(Frees a parking slot) as Frees
+
+'Searches .> Parks : <<include>>
+'Books .> Searches : <<include>>
+'Refuses .> Searches : <<include>>
+
+Parks ..> Searches : <<include>>
+Searches ..> Books : <<include>>
+Searches ..> Refuses : <<include>>
+
+Leaves ..> Frees : <<include>>
+Leaves ..> Bills : <<include>>
+
+
+:Customer:
+:Manager:
+:Attendant:
+:Accountant:
+
+Manager --> Prices
+'newpage
+Customer --> Parks
+Customer --> Leaves
+'newpage
+Attendant --> Searches
+Attendant --> Books
+Attendant --> Frees
+'newpage
+Accountant --> Bills
+
+
+@enduml
+

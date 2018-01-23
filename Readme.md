@@ -21,6 +21,15 @@ The standard maven commands apply:
 
 com.nri.tollparking.client.Client is an example of usage of the API.
 
+## UML modeling
+The uml folder contains:
+- a use case diagram
+- a classe diagram
+
+The text input files are PlantUML files (http://plantuml.com/).
+
+PNG outputs of the diagrams are available for convenience
+
 ## Author
 
 * Nicolas Ribaud

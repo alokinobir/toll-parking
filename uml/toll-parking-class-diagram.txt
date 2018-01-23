@@ -1,0 +1,106 @@
+@startuml
+
+skinparam class {
+backgroundColor<<Billing>> LightGreen
+backgroundColor<<Asset>> LightBlue
+backgroundColor<<Orchestrator>> LightSalmon
+backgroundColor<<Availability>> Violet
+
+}
+
+enum CarEngineType <<Asset>> {
+GASOLINE
+ELECTRIC_20KW
+ELECTRIC_50KW
+}
+
+enum ParkingSlotType <<Asset>> {
+GASOLINE
+ELECTRIC_20KW
+ELECTRIC_50KW
+}
+
+enum ParkingSlotState <<Asset>> {
+FREE
+BUSY
+}
+
+
+class Car <<Asset>>
+class Customer <<Asset>>
+class Parking <<Asset>>
+class ParkingSlot <<Asset>>
+
+class Bill <<Billing>>
+interface PricingPolicy  <<Billing>> {
++BigDecimal computePrice(ParkingSlotUsage slotUsage);
+}
+class GlobalPricingPolicy  <<Billing>>
+class FixedPricingPolicy  <<Billing>>
+class PerHourPricingPolicy  <<Billing>>
+class FixedAmountAndPerHourPricingPolicy  <<Billing>>
+
+class ParkingSlotUsage {
+- startDateTime
+- endDateTime
+}
+
+
+interface ParkingAvailabilityManager <<Availability>> {
++ParkingSlot bookSlot(Car car)
++void freeSlot(ParkingSlot slot);
+
+}
+class SimpleParkingAvailabilityManager <<Availability>>
+class GasolineAndElectricParkingAvailabilityManager <<Availability>>
+
+class ParkingAccountingManager <<Billing>> {
++billCustomer(Customer customer)
+}
+
+class ParkingActivityManager <<Orchestrator>> {
++ParkingSlotUsage comeIn(Car car, ZonedDateTime startDateTime) {
++ParkingSlotUsage comeOut(Car car, ZonedDateTime endDateTime) {
+}
+
+
+Car -- CarEngineType
+ParkingSlot -- ParkingSlotType
+ParkingSlot -- ParkingSlotState
+
+Car --> "1" Customer
+
+Customer o--> "*" Bill
+Bill --> "1" ParkingSlotUsage
+
+Parking *--> "1..*" ParkingSlot
+
+
+
+PricingPolicy  <|-- FixedPricingPolicy
+PricingPolicy  <|-- PerHourPricingPolicy
+PricingPolicy  <|-- GlobalPricingPolicy
+GlobalPricingPolicy <|-- FixedAmountAndPerHourPricingPolicy
+GlobalPricingPolicy o-- "1..*" PricingPolicy
+
+
+ParkingSlotUsage --> "1" Parking
+ParkingSlotUsage --> "1" ParkingSlot
+ParkingSlotUsage --> "1" Car
+ParkingSlotUsage --> "1" Customer
+ParkingSlotUsage --> "1" PricingPolicy
+
+ParkingAvailabilityManager <|-- SimpleParkingAvailabilityManager
+ParkingAvailabilityManager <|-- GasolineAndElectricParkingAvailabilityManager
+
+
+ParkingActivityManager -- "1" Parking
+ParkingActivityManager -- "1" PricingPolicy
+ParkingActivityManager -- "1" ParkingAccountingManager
+ParkingActivityManager -- "1" ParkingAvailabilityManager
+ParkingActivityManager *-- "*" ParkingSlotUsage
+
+
+
+
+@enduml
